@@ -1,0 +1,31 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
+    path('transactions/', views.transaction_list, name='transaction_list'),
+    path('transactions/create/', views.transaction_create, name='transaction_create'),
+    path('transactions/<int:pk>/edit/', views.transaction_edit, name='transaction_edit'),
+    path('transactions/<int:pk>/delete/', views.transaction_delete, name='transaction_delete'),
+    path('workorders/', views.workorder_list, name='workorder_list'),
+    path('workorders/create/', views.workorder_create, name='workorder_create'),
+    path('workorders/<int:pk>/edit/', views.workorder_edit, name='workorder_edit'),
+    path('workorders/<int:pk>/delete/', views.workorder_delete, name='workorder_delete'),
+    path('agents/', views.agent_list, name='agent_list'),
+    path('agents/create/', views.agent_create, name='agent_create'),
+    path('agents/<int:pk>/edit/', views.agent_edit, name='agent_edit'),
+    path('agents/<int:pk>/delete/', views.agent_delete, name='agent_delete'),
+    path('models/', views.model_list, name='model_list'),
+    path('models/create/', views.model_create, name='model_create'),
+    path('models/<int:pk>/edit/', views.model_edit, name='model_edit'),
+    path('models/<int:pk>/delete/', views.model_delete, name='model_delete'),
+    path('models/<int:pk>/test/', views.model_test, name='model_test'),
+    path('users/', views.user_list, name='user_list'),
+    path('users/create/', views.user_create, name='user_create'),
+    path('profile/', views.profile_view, name='profile'),
+    path('change-password/', views.change_password_view, name='change_password'),
+]

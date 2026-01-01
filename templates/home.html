@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - MyDeepTrade{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="max-w-4xl mx-auto text-center fade-in">
+        <!-- Hero Section -->
+        <div class="mb-16">
+            <h1 class="text-5xl md:text-6xl font-semibold text-white mb-4 tracking-tight">
+                MyDeepTrade
+            </h1>
+            <p class="text-lg text-gray-400 max-w-2xl">
+                An intelligent trading platform with deep analysis
+            </p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid md:grid-cols-3 gap-8 mb-16 max-w-4xl">
+            <div class="space-y-2">
+                <h3 class="text-base font-medium text-white">Real-Time Analysis</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Monitor the market with instantly updated data</p>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-base font-medium text-white">Deep Learning</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">AI-powered predictions and insights</p>
+            </div>
+            <div class="space-y-2">
+                <h3 class="text-base font-medium text-white">Safe Trading</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Risk management and optimized strategies</p>
+            </div>
+        </div>
+
+        <!-- CTA Buttons -->
+        {% if not user.is_authenticated %}
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="{% url 'register' %}" class="bg-white hover:bg-gray-200 text-black px-5 py-2.5 rounded-md text-sm font-medium transition">
+                Get Started
+            </a>
+            <a href="{% url 'login' %}" class="bg-transparent hover:bg-gray-800 text-white border border-gray-700 px-5 py-2.5 rounded-md text-sm font-medium transition">
+                Login
+            </a>
+        </div>
+        {% else %}
+        <div>
+            <a href="{% url 'dashboard' %}" class="bg-white hover:bg-gray-200 text-black px-5 py-2.5 rounded-md text-sm font-medium transition inline-block">
+                Go to Dashboard
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

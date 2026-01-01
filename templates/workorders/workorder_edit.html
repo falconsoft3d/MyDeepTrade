@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Work Order - MyDeepTrade{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-black border-r border-gray-800 fixed h-full overflow-y-auto">
+        <div class="p-4">
+            <h2 class="text-sm font-semibold text-white mb-4 px-3">Menu</h2>
+            
+            <nav class="space-y-1">
+                <a href="{% url 'dashboard' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-900 text-gray-400 hover:text-white transition text-sm">
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="{% url 'transaction_list' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-900 text-gray-400 hover:text-white transition text-sm">
+                    <span>Transactions</span>
+                </a>
+                
+                <a href="{% url 'workorder_list' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md bg-gray-900 text-white text-sm">
+                    <span>Work Orders</span>
+                </a>
+                
+                <a href="{% url 'agent_list' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-900 text-gray-400 hover:text-white transition text-sm">
+                    <span>Agents</span>
+                </a>
+                
+                <a href="{% url 'model_list' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-900 text-gray-400 hover:text-white transition text-sm">
+                    <span>Models</span>
+                </a>
+                
+                <a href="{% url 'user_list' %}" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-900 text-gray-400 hover:text-white transition text-sm">
+                    <span>Users</span>
+                </a>
+            </nav>
+            
+            <div class="mt-8 pt-4 border-t border-gray-800">
+                <div class="px-3 py-2">
+                    <p class="text-white text-xs font-medium">{{ user.username }}</p>
+                    <p class="text-gray-600 text-xs mt-0.5">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <div class="flex-1 ml-60">
+        <div class="px-8 py-8">
+            <div class="max-w-3xl mx-auto">
+                <!-- Header -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-semibold text-white mb-1">Edit Work Order</h1>
+                    <p class="text-sm text-gray-500">Update work order: {{ workorder.sequence }}</p>
+                </div>
+
+                <!-- Form -->
+                <div class="border border-gray-800 rounded-md p-6">
+                    <form method="POST" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        <div class="bg-gray-900 border border-gray-800 rounded-md p-4">
+                            <p class="text-xs text-gray-500 mb-1">Sequence Number</p>
+                            <p class="text-lg font-mono font-semibold text-white">{{ workorder.sequence }}</p>
+                        </div>
+
+                        <div>
+                            <label for="agent" class="block text-sm font-medium text-gray-300 mb-2">
+                                Agent *
+                            </label>
+                            <select 
+                                name="agent"
+                                id="agent"
+                                class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-300"
+                                required
+                            >
+                                <option value="">Select an agent</option>
+                                {% for agent in agents %}
+                                <option value="{{ agent.id }}" {% if agent.id == workorder.agent.id %}selected{% endif %}>{{ agent.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="prompt" class="block text-sm font-medium text-gray-300 mb-2">
+                                Order Prompt *
+                            </label>
+                            <textarea 
+                                name="prompt"
+                                id="prompt"
+                                rows="6"
+                                class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-300 font-mono text-sm"
+                                required
+                                placeholder="Enter the work order prompt instructions..."
+                            >{{ workorder.prompt }}</textarea>
+                            <p class="mt-2 text-xs text-gray-400">Detailed instructions for the work order.</p>
+                        </div>
+
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-300 mb-2">
+                                Status *
+                            </label>
+                            <select 
+                                name="status"
+                                id="status"
+                                class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-300"
+                                required
+                            >
+                                <option value="draft" {% if workorder.status == 'draft' %}selected{% endif %}>Draft</option>
+                                <option value="working" {% if workorder.status == 'working' %}selected{% endif %}>Working</option>
+                                <option value="completed" {% if workorder.status == 'completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="start_time" class="block text-sm font-medium text-gray-300 mb-2">
+                                    Start Time *
+                                </label>
+                                <input 
+                                    type="time" 
+                                    name="start_time"
+                                    id="start_time"
+                                    value="{{ workorder.start_time|time:'H:i' }}"
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-300"
+                                    required
+                                >
+                            </div>
+                            <div>
+                                <label for="end_time" class="block text-sm font-medium text-gray-300 mb-2">
+                                    End Time *
+                                </label>
+                                <input 
+                                    type="time" 
+                                    name="end_time"
+                                    id="end_time"
+                                    value="{{ workorder.end_time|time:'H:i' }}"
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition duration-300"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 -mt-2">Work order will execute during this time window.</p>
+
+                        <div class="flex gap-3 pt-4">
+                            <button type="submit" class="flex-1 bg-white hover:bg-gray-200 text-black font-medium py-2.5 rounded-md text-sm transition">
+                                Update Work Order
+                            </button>
+                            <a href="{% url 'workorder_list' %}" class="flex-1 border border-gray-800 hover:border-gray-700 text-white font-medium py-2.5 rounded-md text-sm transition text-center">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
