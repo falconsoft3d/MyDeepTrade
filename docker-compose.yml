@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: mydeeptrade_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=mydeeptrade
+      - POSTGRES_USER=mydeeptrade
+      - POSTGRES_PASSWORD=mydeeptrade123
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mydeeptrade"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mydeeptrade_web
+    command: /app/entrypoint.sh
+    volumes:
+      - .:/app
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=postgresql://mydeeptrade:mydeeptrade123@db:5432/mydeeptrade
+      - POSTGRES_DB=mydeeptrade
+      - POSTGRES_USER=mydeeptrade
+      - POSTGRES_PASSWORD=mydeeptrade123
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: mydeeptrade_worker
+    command: /app/worker.sh
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=postgresql://mydeeptrade:mydeeptrade123@db:5432/mydeeptrade
+      - POSTGRES_DB=mydeeptrade
+      - POSTGRES_USER=mydeeptrade
+      - POSTGRES_PASSWORD=mydeeptrade123
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - web
+      - db
+
+volumes:
+  postgres_data:
+  media_data:
